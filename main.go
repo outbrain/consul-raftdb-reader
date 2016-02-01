@@ -58,7 +58,7 @@ func main() {
 		case 1:
 			printJson(log, "", log.Data)
 		case 2, 3:
-			printJson(log, "", decodePeerMsg(log.Data))
+			printJson(log, "", struct{ Peers []string }{Peers: decodePeerMsg(log.Data)})
 		default:
 			printJson(log, "", log.Data)
 		}
