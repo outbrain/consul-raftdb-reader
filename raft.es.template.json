@@ -1,0 +1,31 @@
+{
+  "template": "consul_raft",
+  "settings": {
+    "number_of_shards": 1,
+    "number_of_replicas": 0
+  },
+  "mappings": {
+    "raft_txn": {
+      "dynamic_templates": [
+        {
+          "raw_string": {
+            "match": "*",
+            "match_type": "string",
+            "mapping": {
+              "index": "not_analyzed"
+            }
+          }
+        }
+      ],
+      "properties": {
+        "@timestamp": {
+          "type": "date",
+          "doc_values": true
+        },
+        "data": {
+          "type": "object"
+        }
+      }
+    }
+  }
+}

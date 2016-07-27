@@ -16,3 +16,18 @@ Copy the `raft/raft.db` file from a Consul server - the Consul server process mu
 ```
 consul-raftdb-reader raft.db > raft.events
 ```
+
+## Indexing with ELK
+
+A common use case is analyzing the dump with ELK. You can use the included ElasticSearch [index template](raft.es.template.json) to get ElasticSearch to index the fields properly.
+
+```
+curl -XPUT http://localhost:9200/_template/consul_raft -d @raft.es.template.es
+```
+
+After the index template has been loaded, index the dump to ElasticSearch with Logstash:
+```
+consul-raftdb-reader raft.db | logstash agent -e 'input { stdin { codec => json_lines } } output { elasticsearch { index => "consul_raft" document_type => "raft_txn" hosts => ["localhost:9200"] } }'
+```
+
+Now you can analyze the dump in Kibana.
